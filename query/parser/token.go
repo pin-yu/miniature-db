@@ -1,4 +1,4 @@
-package query
+package parser
 
 type TokenType int
 
@@ -11,7 +11,7 @@ const (
 	UNK
 )
 
-type Token struct {
+type token struct {
 	Lit       string
 	TokenType TokenType
 }

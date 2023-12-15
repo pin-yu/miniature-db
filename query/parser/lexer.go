@@ -1,4 +1,4 @@
-package query
+package parser
 
 import (
 	"strings"
@@ -6,7 +6,7 @@ import (
 	"unicode/utf8"
 )
 
-type Lexer struct {
+type lexer struct {
 	input        string
 	inputLen     int
 	position     int
@@ -14,8 +14,8 @@ type Lexer struct {
 	r            rune
 }
 
-func NewLexer(input string) *Lexer {
-	l := &Lexer{
+func NewLexer(input string) *lexer {
+	l := &lexer{
 		input:        strings.ToLower(input),
 		inputLen:     len(input),
 		position:     0,
@@ -26,9 +26,9 @@ func NewLexer(input string) *Lexer {
 	return l
 }
 
-func (l *Lexer) NextToken() Token {
+func (l *lexer) NextToken() token {
 	if l.r == utf8.RuneError {
-		return Token{
+		return token{
 			Lit:       "",
 			TokenType: UNK,
 		}
@@ -38,7 +38,7 @@ func (l *Lexer) NextToken() Token {
 
 	if isDelim(l.r) {
 		defer l.readChar()
-		return Token{
+		return token{
 			Lit:       string(l.r),
 			TokenType: DELIM,
 		}
@@ -58,29 +58,29 @@ func (l *Lexer) NextToken() Token {
 	if b.Len() != 0 {
 		s := b.String()
 		if hasNonAscii {
-			return Token{
+			return token{
 				Lit:       s,
 				TokenType: UNK,
 			}
 		}
 
 		if isKw(s) {
-			return Token{
+			return token{
 				Lit:       b.String(),
 				TokenType: KW,
 			}
 		}
-		return Token{
+		return token{
 			Lit:       b.String(),
 			TokenType: ID,
 		}
 	}
-	return Token{
+	return token{
 		TokenType: END,
 	}
 }
 
-func (l *Lexer) readChar() {
+func (l *lexer) readChar() {
 	if l.readPosition >= l.inputLen {
 		l.r = 0
 		l.position = l.readPosition
@@ -98,7 +98,7 @@ func (l *Lexer) readChar() {
 // 	return r
 // }
 
-func (l *Lexer) eatSpace() {
+func (l *lexer) eatSpace() {
 	for l.r == ' ' {
 		l.readChar()
 	}
