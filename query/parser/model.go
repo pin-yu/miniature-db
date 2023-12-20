@@ -11,4 +11,7 @@ type CreateTblData struct {
 }
 
 type QueryData struct {
+	ProjFields map[string]any
+	Tables     map[string]any
+	Predicate  sqltype.Predicate
 }
