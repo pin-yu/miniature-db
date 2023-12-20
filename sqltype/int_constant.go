@@ -1,4 +1,4 @@
-package datatype
+package sqltype
 
 type IntConstant struct {
 	val int32

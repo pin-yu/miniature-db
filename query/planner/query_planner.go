@@ -1,11 +1,10 @@
 package planner
 
-import "github.com/pin-yu/miniature-db/query/parser"
+import (
+	"github.com/pin-yu/miniature-db/query/algebra"
+	"github.com/pin-yu/miniature-db/query/parser"
+)
 
-type queryPlanner struct {
-	parser *parser.Parser
-}
-
-func (p *queryPlanner) ParseQuery() {
-
+type QueryPlanner interface {
+	CreatePlan(parser.QueryData) algebra.Plan
 }

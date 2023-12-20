@@ -1,4 +1,4 @@
-package datatype
+package sqltype
 
 import "strings"
 

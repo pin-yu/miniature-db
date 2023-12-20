@@ -14,7 +14,7 @@ type lexer struct {
 	r            rune
 }
 
-func NewLexer(input string) *lexer {
+func newLexer(input string) *lexer {
 	l := &lexer{
 		input:        strings.ToLower(input),
 		inputLen:     len(input),

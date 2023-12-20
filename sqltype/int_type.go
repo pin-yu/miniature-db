@@ -1,4 +1,4 @@
-package datatype
+package sqltype
 
 const IntByteLen = 4
 

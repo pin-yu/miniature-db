@@ -1,4 +1,4 @@
-package datatype
+package sqltype
 
 type Type interface {
 	ByteLen() int
