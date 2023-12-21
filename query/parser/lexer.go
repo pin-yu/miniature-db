@@ -11,6 +11,7 @@ type lexer struct {
 	inputLen     int
 	position     int
 	readPosition int
+	readRune     int
 	r            rune
 }
 
@@ -20,6 +21,7 @@ func newLexer(input string) *lexer {
 		inputLen:     len(input),
 		position:     0,
 		readPosition: 0,
+		readRune:     0,
 		r:            0,
 	}
 	l.readChar()
@@ -30,6 +32,7 @@ func (l *lexer) NextToken() token {
 	if l.r == utf8.RuneError {
 		return token{
 			Lit:       "",
+			EndPos:    l.readRune,
 			TokenType: UNK,
 		}
 	}
@@ -40,6 +43,7 @@ func (l *lexer) NextToken() token {
 		defer l.readChar()
 		return token{
 			Lit:       string(l.r),
+			EndPos:    l.readRune,
 			TokenType: DELIM,
 		}
 	}
@@ -47,35 +51,48 @@ func (l *lexer) NextToken() token {
 	hasNonAscii := false
 
 	b := strings.Builder{}
-	for r := l.r; !isDelim(r) && l.r != 0; r = l.r {
-		if r > unicode.MaxASCII {
+	for l.r != 0 {
+		if l.r > unicode.MaxASCII {
 			hasNonAscii = true
 		}
-		b.WriteRune(r)
+		b.WriteRune(l.r)
+
+		// peek
+		if isDelim(l.peekChar()) {
+			break
+		}
+
 		l.readChar()
 	}
 
 	if b.Len() != 0 {
 		s := b.String()
 		if hasNonAscii {
+			defer l.readChar()
 			return token{
 				Lit:       s,
+				EndPos:    l.readRune,
 				TokenType: UNK,
 			}
 		}
 
 		if isKw(s) {
+			defer l.readChar()
 			return token{
 				Lit:       b.String(),
+				EndPos:    l.readRune,
 				TokenType: KW,
 			}
 		}
+		defer l.readChar()
 		return token{
 			Lit:       b.String(),
+			EndPos:    l.readRune,
 			TokenType: ID,
 		}
 	}
 	return token{
+		EndPos:    l.readRune,
 		TokenType: END,
 	}
 }
@@ -90,13 +107,17 @@ func (l *lexer) readChar() {
 	r, size := utf8.DecodeRuneInString(l.input[l.readPosition:])
 	l.position = l.readPosition
 	l.readPosition += size
+	l.readRune += 1
 	l.r = r
 }
 
-// func (l *Lexer) peekChar() rune {
-// 	r, _ := utf8.DecodeLastRuneInString(l.input[l.readPosition:])
-// 	return r
-// }
+func (l *lexer) peekChar() rune {
+	if l.readPosition >= l.inputLen {
+		return 0
+	}
+	r, _ := utf8.DecodeRuneInString(l.input[l.readPosition:])
+	return r
+}
 
 func (l *lexer) eatSpace() {
 	for l.r == ' ' {

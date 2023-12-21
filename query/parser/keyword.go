@@ -56,6 +56,8 @@ var delims = []rune{
 	'\'',
 	'=',
 	' ',
+	'\'',
+	'"',
 }
 
 var delimSet = map[rune]any{}

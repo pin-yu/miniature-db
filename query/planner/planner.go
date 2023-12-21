@@ -19,11 +19,14 @@ func NewPlanner(qPlanner QueryPlanner, uPlanner UpdatePlanner) *Planner {
 	}
 }
 
-func (p *Planner) CreateQueryPlan(qry string) algebra.Plan {
+func (p *Planner) CreateQueryPlan(qry string) (algebra.Plan, error) {
 	parser := parser.NewParser(qry)
-	queryData := parser.ParseQuery()
+	queryData, err := parser.ParseQuery()
+	if err != nil {
+		return nil, err
+	}
 
 	// TODO: verify queryData before creating a plan
 
-	return p.qPlanner.CreatePlan(queryData)
+	return p.qPlanner.CreatePlan(queryData), nil
 }

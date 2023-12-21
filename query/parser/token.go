@@ -13,5 +13,6 @@ const (
 
 type token struct {
 	Lit       string
+	EndPos    int
 	TokenType TokenType
 }

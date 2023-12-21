@@ -6,12 +6,12 @@ import (
 )
 
 type QueryPlanner interface {
-	CreatePlan(parser.QueryData) algebra.Plan
+	CreatePlan(*parser.QueryData) algebra.Plan
 }
 
 type BasicQPlanner struct {
 }
 
-func (p *BasicQPlanner) CreatePlan(parser.QueryData) algebra.Plan {
+func (p *BasicQPlanner) CreatePlan(*parser.QueryData) algebra.Plan {
 	return &algebra.SelectPlan{}
 }
