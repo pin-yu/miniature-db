@@ -64,8 +64,8 @@ func (p *Parser) nextToken() {
 	p.curToken = p.l.NextToken()
 }
 
-func (p *Parser) parseProjFields() (map[string]any, error) {
-	projFields := map[string]any{}
+func (p *Parser) parseProjFields() (map[string]struct{}, error) {
+	projFields := map[string]struct{}{}
 	lastComma := false
 	for {
 		p.nextToken()
@@ -93,7 +93,7 @@ func (p *Parser) parseProjFields() (map[string]any, error) {
 			if p.curToken.TokenType != ID {
 				return nil, fmt.Errorf("bad syntax, pos=%d", p.curToken.EndPos)
 			} else {
-				projFields[p.curToken.Lit] = nil
+				projFields[p.curToken.Lit] = struct{}{}
 			}
 
 			p.nextToken()
@@ -101,14 +101,14 @@ func (p *Parser) parseProjFields() (map[string]any, error) {
 				return nil, fmt.Errorf("bad syntax, pos=%d", p.curToken.EndPos)
 			}
 		} else {
-			projFields[p.curToken.Lit] = nil
+			projFields[p.curToken.Lit] = struct{}{}
 		}
 	}
 	return projFields, nil
 }
 
-func (p *Parser) parseTables() (map[string]any, error) {
-	tables := map[string]any{}
+func (p *Parser) parseTables() (map[string]struct{}, error) {
+	tables := map[string]struct{}{}
 	lastComma := false
 	for {
 		p.nextToken()
@@ -135,7 +135,7 @@ func (p *Parser) parseTables() (map[string]any, error) {
 			if p.curToken.TokenType != ID {
 				return nil, fmt.Errorf("bad syntax, pos=%d", p.curToken.EndPos)
 			} else {
-				tables[p.curToken.Lit] = nil
+				tables[p.curToken.Lit] = struct{}{}
 			}
 
 			p.nextToken()
@@ -143,7 +143,7 @@ func (p *Parser) parseTables() (map[string]any, error) {
 				return nil, fmt.Errorf("bad syntax, pos=%d", p.curToken.EndPos)
 			}
 		} else {
-			tables[p.curToken.Lit] = nil
+			tables[p.curToken.Lit] = struct{}{}
 		}
 	}
 	return tables, nil

@@ -11,7 +11,7 @@ type CreateTblData struct {
 }
 
 type QueryData struct {
-	ProjFields map[string]any
-	Tables     map[string]any
+	ProjFields map[string]struct{}
+	Tables     map[string]struct{}
 	Predicate  sqltype.Predicate
 }

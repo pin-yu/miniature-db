@@ -2,11 +2,11 @@ package parser
 
 func init() {
 	for _, s := range kws {
-		kwSet[s] = nil
+		kwSet[s] = struct{}{}
 	}
 
 	for _, d := range delims {
-		delimSet[d] = nil
+		delimSet[d] = struct{}{}
 	}
 }
 
@@ -41,7 +41,7 @@ var kws = []string{
 	"where",
 }
 
-var kwSet = map[string]any{}
+var kwSet = map[string]struct{}{}
 
 func isKw(s string) bool {
 	_, exist := kwSet[s]
@@ -60,7 +60,7 @@ var delims = []rune{
 	'"',
 }
 
-var delimSet = map[rune]any{}
+var delimSet = map[rune]struct{}{}
 
 func isDelim(r rune) bool {
 	_, exist := delimSet[r]

@@ -18,11 +18,11 @@ func TestParseQuery(t *testing.T) {
 			"1 projection 1 table",
 			"SELECT c1 FROM t1;",
 			QueryData{
-				ProjFields: map[string]any{
-					"c1": nil,
+				ProjFields: map[string]struct{}{
+					"c1": {},
 				},
-				Tables: map[string]any{
-					"t1": nil,
+				Tables: map[string]struct{}{
+					"t1": {},
 				},
 				Predicate: sqltype.Predicate{},
 			},
